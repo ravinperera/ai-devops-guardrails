@@ -1,0 +1,43 @@
+name: safer-deploy-example
+
+on:
+  push:
+    branches: ["main"]
+
+permissions: read-all
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS credentials through OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.AWS_DEPLOYMENT_ROLE_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - name: Validate deployment inputs
+        run: |
+          set -euo pipefail
+          test -n "${{ vars.AWS_DEPLOYMENT_ROLE_ARN }}"
+          test -n "${{ vars.AWS_REGION }}"
+
+      - name: Deploy
+        run: |
+          set -euo pipefail
+          ./deploy.sh production
+
+      - name: Post-deployment verification
+        run: |
+          set -euo pipefail
+          ./verify-deployment.sh production
