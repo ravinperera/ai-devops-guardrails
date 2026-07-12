@@ -1,0 +1,37 @@
+name: Validate repository
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Lint Markdown
+        run: npx --yes markdownlint-cli2@0.17.2 "**/*.md"
+
+      - name: Validate YAML syntax
+        shell: ruby {0}
+        run: |
+          require "yaml"
+
+          files = Dir.glob("**/*.{yml,yaml}", File::FNM_DOTMATCH)
+          files.each do |file|
+            next if file.start_with?(".git/")
+
+            YAML.load_file(file)
+            puts "Validated #{file}"
+          end
