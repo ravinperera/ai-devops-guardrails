@@ -97,6 +97,8 @@ Validation: terraform validate, terraform plan, workflow dry run, staging deploy
 Recommendation: Safe to proceed after IAM scope reduction
 ```
 
+For a complete walkthrough, see the [worked AWS IAM review](examples/aws-iam-review.md), which identifies wildcard permissions, explains the privilege-escalation path, proposes a safer direction, and records validation and rollback steps.
+
 ## What this project is not
 
 This project is not a replacement for human review, security approval, change management or production governance.
