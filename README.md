@@ -105,6 +105,8 @@ This project is not a replacement for human review, security approval, change ma
 
 It is a practical instruction layer for AI coding agents so they behave more like careful platform engineers and less like fast code generators.
 
+Review the [guardrail limitations and required verification](docs/limitations-and-verification.md) before treating an agent's output as approval evidence. The guidance explains unknown runtime context, evidence expectations, and conditions that require human escalation.
+
 ## Safety principles
 
 - Read before changing.
