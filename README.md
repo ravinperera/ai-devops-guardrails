@@ -118,6 +118,16 @@ Review the [guardrail limitations and required verification](docs/limitations-an
 - Validate before deployment and verify after deployment.
 - Document known trade-offs.
 
+## Repository validation
+
+Pull requests run a lightweight validation workflow that:
+
+- lints Markdown files using the repository configuration;
+- parses YAML files to catch syntax errors;
+- uses read-only repository permissions and no cloud credentials.
+
+The workflow intentionally does not attempt live validation of Terraform, IAM, deployment or agent integrations because the repository contains portable instruction and example files rather than an executable production environment.
+
 ## Repository status
 
 This is an early version. The first goal is to provide portable DevOps guardrails through plain instruction files and reusable skill prompts. Agent-specific plugin manifests and hooks can be added later.
