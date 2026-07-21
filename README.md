@@ -118,9 +118,15 @@ Review the [guardrail limitations and required verification](docs/limitations-an
 - Validate before deployment and verify after deployment.
 - Document known trade-offs.
 
+## Integration roadmap
+
+Current support is instruction-based, with reusable skill prompts available for compatible agents. See the [agent portability guide](docs/agent-portability.md) and [agent integration roadmap](docs/roadmap.md) for the distinction between instruction, skill, and planned plugin tiers.
+
+Planned adapters such as Claude Code, Codex, Cursor, and OpenCode are not described as supported until they are implemented, tested, and documented.
+
 ## Repository status
 
-This is an early version. The first goal is to provide portable DevOps guardrails through plain instruction files and reusable skill prompts. Agent-specific plugin manifests and hooks can be added later.
+This is an early version. The current goal is to strengthen portable instructions, reusable review skills, examples, and validation before adding thin agent-specific adapters.
 
 ## License
 
