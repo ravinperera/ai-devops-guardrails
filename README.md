@@ -101,6 +101,13 @@ Recommendation: Safe to proceed after IAM scope reduction
 
 For a complete walkthrough, see the [worked AWS IAM review](examples/aws-iam-review.md), which identifies wildcard permissions, explains the privilege-escalation path, proposes a safer direction, and records validation and rollback steps.
 
+## Project guides
+
+- [Agent installation](docs/installation.md) — copy and verify instruction files for supported workflows.
+- [Repository validation](docs/validation.md) — understand the credential-free CI checks and intentional exclusions.
+- [Limitations and required verification](docs/limitations-and-verification.md) — separate agent output from approval evidence.
+- [Agent adapter roadmap](docs/roadmap.md) — follow the instruction, skill, and future adapter support tiers.
+
 ## What this project is not
 
 This project is not a replacement for human review, security approval, change management or production governance.
@@ -122,7 +129,7 @@ Review the [guardrail limitations and required verification](docs/limitations-an
 
 ## Repository status
 
-This is an early version. The first goal is to provide portable DevOps guardrails through plain instruction files and reusable skill prompts. Agent-specific plugin manifests and hooks can be added later.
+This is an early version. The current supported surface is portable instruction files and reusable review skills. Tool-specific adapters remain future work unless this repository contains a tested implementation, installation guidance, security model, and maintenance owner.
 
 ## License
 
