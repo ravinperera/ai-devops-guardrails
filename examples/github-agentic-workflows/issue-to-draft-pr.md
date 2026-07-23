@@ -12,7 +12,6 @@ safe-outputs:
   max-patch-size: 256
   create-pull-request:
     title-prefix: "[agentic-maintenance] "
-    labels: [automation]
     draft: true
     max: 1
     max-patch-files: 5
