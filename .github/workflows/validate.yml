@@ -1,0 +1,36 @@
+name: Validate repository
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    name: Markdown, YAML, and script checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check Markdown and YAML text hygiene
+        run: python3 scripts/check-text-hygiene.py
+
+      - name: Validate YAML syntax
+        shell: bash
+        run: |
+          git ls-files -z '*.yml' '*.yaml' |
+            ruby -e 'require "yaml"; STDIN.read.split("\0").reject(&:empty?).each { |path| YAML.parse_file(path); puts "validated #{path}" }'
+
+      - name: Compile Python helper scripts
+        run: python3 -m compileall -q scripts
