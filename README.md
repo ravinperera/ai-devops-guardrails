@@ -107,6 +107,7 @@ For a complete walkthrough, see the [worked AWS IAM review](examples/aws-iam-rev
 - [Repository validation](docs/validation.md) — understand the credential-free CI checks and intentional exclusions.
 - [Limitations and required verification](docs/limitations-and-verification.md) — separate agent output from approval evidence.
 - [Agent adapter roadmap](docs/roadmap.md) — follow the instruction, skill, and future adapter support tiers.
+- [GitHub Agentic Workflows](docs/github-agentic-workflows.md) — safely trial an issue-to-draft-PR maintenance workflow with bounded safe outputs and human review.
 
 ## What this project is not
 
