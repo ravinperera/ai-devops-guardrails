@@ -64,6 +64,8 @@ mkdir -p /path/to/your/project/.github
 cp .github/copilot-instructions.md /path/to/your/project/.github/copilot-instructions.md
 ```
 
+See the [agent installation guide](docs/installation.md) for setup examples for Codex, Claude Code, GitHub Copilot, Cursor and generic `AGENTS.md` workflows, plus a safe validation checklist.
+
 Then ask your agent to use one of the review workflows:
 
 ```text
