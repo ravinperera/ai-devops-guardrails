@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   list:
-    name: List checked files
+    name: Find failing files
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.files.outputs.matrix }}
@@ -16,61 +16,49 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Build file matrix
+      - name: Build failing-file matrix
         id: files
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           import subprocess
+          from pathlib import Path
 
           raw = subprocess.run(
               ["git", "ls-files", "-z"],
               check=True,
               capture_output=True,
           ).stdout
-          paths = [
-              item.decode("utf-8")
-              for item in raw.split(b"\0")
-              if item and item.decode("utf-8").lower().endswith((".md", ".yml", ".yaml"))
-          ]
-          print("matrix=" + json.dumps({"path": paths}, separators=(",", ":")))
+          failures = []
+          for item in raw.split(b"\0"):
+              if not item:
+                  continue
+              path = Path(item.decode("utf-8"))
+              if path.suffix.lower() not in {".md", ".yml", ".yaml"}:
+                  continue
+              content = path.read_bytes()
+              failed = b"\0" in content
+              try:
+                  text = content.decode("utf-8")
+              except UnicodeDecodeError:
+                  failed = True
+                  text = ""
+              if text and not text.endswith("\n"):
+                  failed = True
+              if any(line.rstrip(" \t") != line for line in text.splitlines()):
+                  failed = True
+              if failed:
+                  failures.append(str(path))
+          print("matrix=" + json.dumps({"path": failures}, separators=(",", ":")))
           PY
 
   check:
-    name: Check ${{ matrix.path }}
+    name: Failing file ${{ matrix.path }}
     needs: list
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.list.outputs.matrix) }}
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-
-      - name: Check selected file
-        env:
-          TARGET: ${{ matrix.path }}
-        run: |
-          python3 - <<'PY'
-          import os
-          from pathlib import Path
-
-          path = Path(os.environ["TARGET"])
-          raw = path.read_bytes()
-          failures = []
-          if b"\0" in raw:
-              failures.append("contains a NUL byte")
-          try:
-              text = raw.decode("utf-8")
-          except UnicodeDecodeError as exc:
-              failures.append(f"invalid UTF-8: {exc}")
-              text = ""
-          if text and not text.endswith("\n"):
-              failures.append("missing final newline")
-          for number, line in enumerate(text.splitlines(), start=1):
-              if line.rstrip(" \t") != line:
-                  failures.append(f"line {number}: trailing whitespace")
-          if failures:
-              raise SystemExit("; ".join(failures))
-          print(f"passed: {path}")
-          PY
+      - name: Report failing file
+        run: echo "Text hygiene failed for ${{ matrix.path }}"
