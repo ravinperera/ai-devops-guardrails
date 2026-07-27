@@ -1,4 +1,4 @@
-name: Diagnose all text hygiene
+name: Diagnose text validator
 
 on:
   pull_request:
@@ -7,58 +7,43 @@ permissions:
   contents: read
 
 jobs:
-  list:
-    name: Find failing files
+  capture:
+    name: Capture validator output
     runs-on: ubuntu-latest
     outputs:
-      matrix: ${{ steps.files.outputs.matrix }}
+      matrix: ${{ steps.result.outputs.matrix }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Build failing-file matrix
-        id: files
+      - name: Run validator and capture output
+        id: result
         run: |
           python3 - <<'PY' >> "$GITHUB_OUTPUT"
           import json
           import subprocess
-          from pathlib import Path
 
-          raw = subprocess.run(
-              ["git", "ls-files", "-z"],
-              check=True,
+          result = subprocess.run(
+              ["python3", "scripts/check-text-hygiene.py"],
               capture_output=True,
-          ).stdout
-          failures = []
-          for item in raw.split(b"\0"):
-              if not item:
-                  continue
-              path = Path(item.decode("utf-8"))
-              if path.suffix.lower() not in {".md", ".yml", ".yaml"}:
-                  continue
-              content = path.read_bytes()
-              failed = b"\0" in content
-              try:
-                  text = content.decode("utf-8")
-              except UnicodeDecodeError:
-                  failed = True
-                  text = ""
-              if text and not text.endswith("\n"):
-                  failed = True
-              if any(line.rstrip(" \t") != line for line in text.splitlines()):
-                  failed = True
-              if failed:
-                  failures.append(str(path))
-          print("matrix=" + json.dumps({"path": failures}, separators=(",", ":")))
+              text=True,
+          )
+          lines = [line.strip() for line in result.stderr.splitlines() if line.strip()]
+          if not lines:
+              lines = [line.strip() for line in result.stdout.splitlines() if line.strip()]
+          if not lines:
+              lines = [f"validator return code {result.returncode}"]
+          messages = [line[:180] for line in lines]
+          print("matrix=" + json.dumps({"message": messages}, separators=(",", ":")))
           PY
 
-  check:
-    name: Failing file ${{ matrix.path }}
-    needs: list
+  report:
+    name: Validator says ${{ matrix.message }}
+    needs: capture
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.list.outputs.matrix) }}
+      matrix: ${{ fromJSON(needs.capture.outputs.matrix) }}
     steps:
-      - name: Report failing file
-        run: echo "Text hygiene failed for ${{ matrix.path }}"
+      - name: Report captured line
+        run: echo "${{ matrix.message }}"
