@@ -1,0 +1,59 @@
+name: Diagnose text hygiene
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check ${{ matrix.path }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        path:
+          - README.md
+          - .github/workflows/validate.yml
+          - scripts/check-text-hygiene.py
+          - docs/installation.md
+          - docs/validation.md
+          - docs/roadmap.md
+          - docs/agent-portability.md
+          - docs/github-agentic-workflows.md
+          - examples/github-agentic-workflows/issue-to-draft-pr.md
+          - examples/reviews/terraform-security-group.md
+          - examples/reviews/github-actions-oidc.md
+          - examples/reviews/deployment-readiness.md
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check selected file
+        env:
+          TARGET: ${{ matrix.path }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from pathlib import Path
+
+          path = Path(os.environ["TARGET"])
+          raw = path.read_bytes()
+          failures = []
+          if b"\0" in raw:
+              failures.append("contains a NUL byte")
+          try:
+              text = raw.decode("utf-8")
+          except UnicodeDecodeError as exc:
+              failures.append(f"invalid UTF-8: {exc}")
+              text = ""
+          if text and not text.endswith("\n"):
+              failures.append("missing final newline")
+          for number, line in enumerate(text.splitlines(), start=1):
+              if line.rstrip(" \t") != line:
+                  failures.append(f"line {number}: trailing whitespace")
+          if failures:
+              raise SystemExit("; ".join(failures))
+          print(f"passed: {path}")
+          PY
