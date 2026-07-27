@@ -112,6 +112,8 @@ Each example uses fictional placeholders and separates the original request, uns
 ## Project guides
 
 - [Agent installation](docs/installation.md) — copy and verify instruction files for supported workflows.
+- [Security model](docs/security-model.md) — understand protected assets, trust boundaries, decision outcomes and companion controls.
+- [Refusal examples](docs/refusal-examples.md) — learn when an agent should pause or decline a request and provide a safer alternative.
 - [Repository validation](docs/validation.md) — understand the credential-free CI checks and intentional exclusions.
 - [Limitations and required verification](docs/limitations-and-verification.md) — separate agent output from approval evidence.
 - [Agent adapter roadmap](docs/roadmap.md) — follow the instruction, skill, and future adapter support tiers.
