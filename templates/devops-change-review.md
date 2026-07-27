@@ -73,9 +73,9 @@ Record only checks that actually ran.
 
 ## Deployment plan
 
-1. 
-2. 
-3. 
+1. `<first deployment step>`
+2. `<second deployment step>`
+3. `<third deployment step>`
 
 - **Approval gate:**
 - **Deployment identity:**

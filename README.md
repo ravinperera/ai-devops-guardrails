@@ -101,6 +101,14 @@ Recommendation: Safe to proceed after IAM scope reduction
 
 For a complete walkthrough, see the [worked AWS IAM review](examples/aws-iam-review.md), which identifies wildcard permissions, explains the privilege-escalation path, proposes a safer direction, and records validation and rollback steps.
 
+Additional before-and-after reviews show how the same output structure applies to:
+
+- [Terraform security-group changes](examples/reviews/terraform-security-group.md)
+- [GitHub Actions OIDC workflows](examples/reviews/github-actions-oidc.md)
+- [Production deployment readiness](examples/reviews/deployment-readiness.md)
+
+Each example uses fictional placeholders and separates the original request, unsafe direction, review findings, safer approach, validation and approval evidence.
+
 ## Project guides
 
 - [Agent installation](docs/installation.md) — copy and verify instruction files for supported workflows.
