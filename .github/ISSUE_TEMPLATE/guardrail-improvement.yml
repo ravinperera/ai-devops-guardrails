@@ -1,0 +1,70 @@
+name: Guardrail improvement
+description: Propose a focused improvement to an instruction, skill, example, template, or validation check.
+title: "[Guardrail]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use fictional or redacted details. Report sensitive weaknesses privately through the repository security policy.
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      description: Select the main area that needs improvement.
+      options:
+        - Always-on instruction file
+        - Reusable review skill
+        - Example or template
+        - Validation script or test
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: affected-files
+    attributes:
+      label: Affected files or workflows
+      description: List the relevant paths, skills, or supported agent workflows.
+      placeholder: skills/aws-iam-review/SKILL.md
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Current problem
+      description: Explain the missing, unclear, incorrect, or unsafe behaviour.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+      description: Describe the smallest useful change and its expected result.
+    validations:
+      required: true
+  - type: textarea
+    id: safety
+    attributes:
+      label: Safety and risk considerations
+      description: Cover blast radius, permissions, secrets, supply chain, infrastructure, production impact, and rollback where relevant.
+      placeholder: Documentation-only change; no runtime permissions or production impact.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: Suggested validation
+      description: Describe checks or evidence that would show the issue is resolved without overstating what they prove.
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have removed credentials, customer data, internal hostnames, and production identifiers.
+          required: true
+        - label: Any example data is fictional, synthetic, or fully redacted.
+          required: true
+        - label: This issue does not request unapproved infrastructure or production execution.
+          required: true

@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security or safety concern
+    url: https://github.com/ravinperera/ai-devops-guardrails/security/policy
+    about: Use the private reporting guidance for guardrail bypasses, prompt-injection weaknesses, secrets, or unsafe permissions.
