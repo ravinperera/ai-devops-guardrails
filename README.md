@@ -111,6 +111,7 @@ Each example uses fictional placeholders and separates the original request, uns
 
 ## Project guides
 
+- [Contributing](CONTRIBUTING.md) — propose focused changes, protect sensitive data, and run the credential-free checks.
 - [Agent installation](docs/installation.md) — copy and verify instruction files for supported workflows.
 - [Security model](docs/security-model.md) — understand protected assets, trust boundaries, decision outcomes and companion controls.
 - [Refusal examples](docs/refusal-examples.md) — learn when an agent should pause or decline a request and provide a safer alternative.
