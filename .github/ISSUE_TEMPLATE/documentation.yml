@@ -1,0 +1,44 @@
+name: Documentation improvement
+description: Report a focused documentation gap, unclear explanation, or broken repository link.
+title: "[Docs]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please keep reports focused and use fictional or redacted details. Security-sensitive findings belong in the private reporting path.
+  - type: input
+    id: location
+    attributes:
+      label: Documentation location
+      description: Provide the file path, heading, or repository link.
+      placeholder: docs/validation.md — Checks intentionally not included
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What is unclear, missing, or incorrect?
+      description: Describe the reader problem rather than only proposing wording.
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Expected improvement
+      description: Explain the smallest useful correction or addition.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Supporting evidence
+      description: Add repository-relative references or public primary sources when they materially help. Do not include secrets or private links.
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I checked that this is not already covered by an open issue.
+          required: true
+        - label: This report contains no credentials, customer data, internal hostnames, or production identifiers.
+          required: true
