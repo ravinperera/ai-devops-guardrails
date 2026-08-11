@@ -32,6 +32,8 @@ Run the credential-free repository checks from the repository root:
 ```bash
 python3 -m unittest discover -s tests -p 'test_check_text_hygiene.py' -v
 python3 scripts/check-text-hygiene.py
+python3 -m unittest discover -s tests -p 'test_check_markdown_links.py' -v
+python3 scripts/check-markdown-links.py
 
 git ls-files -z '*.yml' '*.yaml' |
   ruby -e 'require "yaml"; STDIN.read.split("\0").reject(&:empty?).each { |path| YAML.parse_file(path); puts "validated #{path}" }'
@@ -39,7 +41,7 @@ git ls-files -z '*.yml' '*.yaml' |
 python3 -m compileall -q scripts
 ```
 
-These checks exercise the text validator, validate repository text hygiene, validate YAML syntax, and compile Python helpers. They do not prove that an agent, policy, workflow, infrastructure change, or production system is safe.
+These checks exercise the text and link validators, validate repository text hygiene, validate YAML syntax, and compile Python helpers. External links are not crawled. The checks do not prove that an agent, policy, workflow, infrastructure change, or production system is safe.
 
 ## Pull request expectations
 
