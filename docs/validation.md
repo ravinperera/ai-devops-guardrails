@@ -21,6 +21,14 @@ The workflow runs on pull requests and pushes to `main`.
 
 The script uses only the Python standard library and `git ls-files`, so contributors do not need to install a package manager dependency.
 
+### Repository-local Markdown links
+
+`scripts/check-markdown-links.py` verifies links between tracked Markdown files and other repository-local targets without making network requests. It rejects missing targets and paths that escape the repository, while ignoring external URLs, page anchors, and links shown inside fenced examples.
+
+`tests/test_check_markdown_links.py` covers existing and missing targets, repository escapes, external URLs, anchors, fenced examples, and URL-encoded local paths.
+
+The link check is intentionally local-only. It does not crawl external sites or prove that an external reference is current or trustworthy.
+
 ### YAML syntax
 
 Ruby's YAML parser reads every tracked `.yml` and `.yaml` file. This catches malformed workflow or configuration syntax before merge.
@@ -38,6 +46,8 @@ From the repository root:
 ```bash
 python3 -m unittest discover -s tests -p 'test_check_text_hygiene.py' -v
 python3 scripts/check-text-hygiene.py
+python3 -m unittest discover -s tests -p 'test_check_markdown_links.py' -v
+python3 scripts/check-markdown-links.py
 
 git ls-files -z '*.yml' '*.yaml' |
   ruby -e 'require "yaml"; STDIN.read.split("\0").reject(&:empty?).each { |path| YAML.parse_file(path); puts "validated #{path}" }'

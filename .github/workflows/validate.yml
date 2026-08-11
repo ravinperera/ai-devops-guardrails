@@ -29,6 +29,12 @@ jobs:
       - name: Check Markdown and YAML text hygiene
         run: python3 scripts/check-text-hygiene.py
 
+      - name: Run Markdown-link unit tests
+        run: python3 -m unittest discover -s tests -p 'test_check_markdown_links.py' -v
+
+      - name: Check repository-local Markdown links
+        run: python3 scripts/check-markdown-links.py
+
       - name: Validate YAML syntax
         shell: bash
         run: |
