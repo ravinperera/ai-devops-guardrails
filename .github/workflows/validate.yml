@@ -23,6 +23,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
+      - name: Run text-hygiene unit tests
+        run: python3 -m unittest discover -s tests -p 'test_check_text_hygiene.py' -v
+
       - name: Check Markdown and YAML text hygiene
         run: python3 scripts/check-text-hygiene.py
 
