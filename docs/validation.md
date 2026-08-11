@@ -6,6 +6,10 @@ The repository uses a lightweight GitHub Actions workflow to catch basic documen
 
 The workflow runs on pull requests and pushes to `main`.
 
+### Text-hygiene regression tests
+
+`tests/test_check_text_hygiene.py` exercises the dependency-free text validator against valid UTF-8 content, trailing whitespace, missing final newlines, NUL bytes, and invalid UTF-8. This protects the validator's expected failure behaviour as the repository evolves.
+
 ### Markdown and YAML text hygiene
 
 `scripts/check-text-hygiene.py` examines tracked Markdown and YAML files and verifies that they:
@@ -32,6 +36,7 @@ The check validates syntax only. It does not prove that a workflow, policy, or t
 From the repository root:
 
 ```bash
+python3 -m unittest discover -s tests -p 'test_check_text_hygiene.py' -v
 python3 scripts/check-text-hygiene.py
 
 git ls-files -z '*.yml' '*.yaml' |

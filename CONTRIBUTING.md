@@ -30,6 +30,7 @@ Small documentation corrections, link fixes, fictional examples, and focused tes
 Run the credential-free repository checks from the repository root:
 
 ```bash
+python3 -m unittest discover -s tests -p 'test_check_text_hygiene.py' -v
 python3 scripts/check-text-hygiene.py
 
 git ls-files -z '*.yml' '*.yaml' |
@@ -38,7 +39,7 @@ git ls-files -z '*.yml' '*.yaml' |
 python3 -m compileall -q scripts
 ```
 
-These checks validate text hygiene, YAML syntax, and Python syntax. They do not prove that an agent, policy, workflow, infrastructure change, or production system is safe.
+These checks exercise the text validator, validate repository text hygiene, validate YAML syntax, and compile Python helpers. They do not prove that an agent, policy, workflow, infrastructure change, or production system is safe.
 
 ## Pull request expectations
 
