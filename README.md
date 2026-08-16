@@ -119,6 +119,7 @@ Each example uses fictional placeholders and separates the original request, uns
 - [Limitations and required verification](docs/limitations-and-verification.md) — separate agent output from approval evidence.
 - [Agent adapter roadmap](docs/roadmap.md) — follow the instruction, skill, and future adapter support tiers.
 - [GitHub Agentic Workflows](docs/github-agentic-workflows.md) — safely trial an issue-to-draft-PR maintenance workflow with bounded safe outputs and human review.
+- [Multi-agent delegation and handoffs](docs/multi-agent-delegation.md) — keep delegated authority narrow, pass compact verifiable state, and stop on ambiguous or approval-sensitive work.
 
 ## What this project is not
 
@@ -137,6 +138,7 @@ Review the [guardrail limitations and required verification](docs/limitations-an
 - Treat IAM, DNS, networking, databases and production deploys as high-risk.
 - Make changes reversible.
 - Validate before deployment and verify after deployment.
+- Delegation must never expand an agent's authority beyond the original approved scope.
 - Document known trade-offs.
 
 ## Repository status
