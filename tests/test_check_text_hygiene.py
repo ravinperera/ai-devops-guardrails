@@ -21,6 +21,9 @@ class TextHygieneTests(unittest.TestCase):
             path.write_bytes(content)
             return hygiene.check_file(path)
 
+    def test_python_files_are_included_in_hygiene_scope(self) -> None:
+        self.assertIn(".py", hygiene.CHECKED_SUFFIXES)
+
     def test_valid_utf8_with_final_newline_passes(self) -> None:
         self.assertEqual(self.check_bytes("# Café\n".encode("utf-8")), [])
 

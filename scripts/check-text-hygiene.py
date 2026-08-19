@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check tracked Markdown and YAML files for portable text hygiene issues."""
+"""Check tracked repository text files for portable text hygiene issues."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-CHECKED_SUFFIXES = {".md", ".yml", ".yaml"}
+CHECKED_SUFFIXES = {".md", ".py", ".yml", ".yaml"}
 
 
 def tracked_files() -> list[Path]:
@@ -59,7 +59,9 @@ def main() -> int:
             print(f"- {failure}", file=sys.stderr)
         return 1
 
-    print(f"Validated UTF-8, final newlines, and trailing whitespace in {checked} files.")
+    print(
+        f"Validated UTF-8, final newlines, and trailing whitespace in {checked} text files."
+    )
     return 0
 
 
