@@ -34,7 +34,14 @@
 <!-- Record checks actually executed, results, and evidence. Do not list planned checks as completed. -->
 
 ```text
+python3 -m unittest discover -s tests -p 'test_check_text_hygiene.py' -v
 python3 scripts/check-text-hygiene.py
+python3 -m unittest discover -s tests -p 'test_check_markdown_links.py' -v
+python3 scripts/check-markdown-links.py
+
+git ls-files -z '*.yml' '*.yaml' |
+  ruby -e 'require "yaml"; STDIN.read.split("\0").reject(&:empty?).each { |path| YAML.parse_file(path); puts "validated #{path}" }'
+
 python3 -m compileall -q scripts
 ```
 
