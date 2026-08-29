@@ -1,5 +1,7 @@
 # Claude Code Instructions
 
+`AGENTS.md` is the canonical policy for this repository. Read and follow it first. This file adds Claude-specific working guidance only; if this adapter conflicts with `AGENTS.md`, `AGENTS.md` wins.
+
 Use the AI DevOps Guardrails in this repository whenever a task touches infrastructure, CI/CD, cloud access, secrets, deployment automation, observability or production operations.
 
 ## Working style

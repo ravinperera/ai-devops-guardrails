@@ -29,6 +29,12 @@ jobs:
       - name: Check repository text hygiene
         run: python3 scripts/check-text-hygiene.py
 
+      - name: Run adapter-policy unit tests
+        run: python3 -m unittest discover -s tests -p 'test_check_agent_adapters.py' -v
+
+      - name: Check provider adapters reference canonical policy
+        run: python3 scripts/check-agent-adapters.py
+
       - name: Run Markdown-link unit tests
         run: python3 -m unittest discover -s tests -p 'test_check_markdown_links.py' -v
 

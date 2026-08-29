@@ -1,5 +1,7 @@
 # GitHub Copilot Instructions
 
+`AGENTS.md` is the canonical policy for this repository. Read and follow it first. This file adds Copilot-specific working guidance only; if this adapter conflicts with `AGENTS.md`, `AGENTS.md` wins.
+
 This repository uses AI DevOps Guardrails.
 
 When suggesting changes to infrastructure, deployment, CI/CD, cloud access, secrets, observability or operational scripts, prioritise safety and reversibility over speed.
