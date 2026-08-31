@@ -29,6 +29,9 @@ jobs:
       - name: Check repository text hygiene
         run: python3 scripts/check-text-hygiene.py
 
+      - name: Run evaluation-corpus tests
+        run: python3 -m unittest discover -s tests -p 'test_evaluation_corpus.py' -v
+
       - name: Run adapter-policy unit tests
         run: python3 -m unittest discover -s tests -p 'test_check_agent_adapters.py' -v
 
