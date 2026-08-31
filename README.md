@@ -109,12 +109,15 @@ Additional before-and-after reviews show how the same output structure applies t
 
 Each example uses fictional placeholders and separates the original request, unsafe direction, review findings, safer approach, validation and approval evidence.
 
+For repeatable regression testing, [`examples/evaluation-corpus.json`](examples/evaluation-corpus.json) defines synthetic safe-review, approval-boundary, secret-handling, destructive-action, ambiguity, and false-positive cases. The repository validates the corpus structure in CI, but does not claim model-specific pass rates; adopters should record model, prompt/instruction version, evaluator, and observed result when running it.
+
 ## Project guides
 
 - [Contributing](CONTRIBUTING.md) — propose focused changes, protect sensitive data, and run the credential-free checks.
 - [Agent installation](docs/installation.md) — copy and verify instruction files for supported workflows.
 - [Security model](docs/security-model.md) — understand protected assets, trust boundaries, decision outcomes and companion controls.
 - [Refusal examples](docs/refusal-examples.md) — learn when an agent should pause or decline a request and provide a safer alternative.
+- [Evaluation corpus](examples/evaluation-corpus.json) — machine-readable synthetic cases for regression-testing guardrail decisions without live cloud access.
 - [Repository validation](docs/validation.md) — understand the credential-free CI checks and intentional exclusions.
 - [Limitations and required verification](docs/limitations-and-verification.md) — separate agent output from approval evidence.
 - [Agent adapter roadmap](docs/roadmap.md) — follow the instruction, skill, and future adapter support tiers.
