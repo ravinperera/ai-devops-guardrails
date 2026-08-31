@@ -24,6 +24,12 @@ The credential patterns are intentionally conservative. Redacted placeholders re
 
 The script uses only the Python standard library and `git ls-files`, so contributors do not need to install a package manager dependency.
 
+### Evaluation corpus structure
+
+`tests/test_evaluation_corpus.py` validates the synthetic guardrail cases in `examples/evaluation-corpus.json`. It checks the schema version, required fields, unique identifiers, decision values, evidence requirements, and coverage of the core safe-review, approval, refusal, ambiguity, secret-handling, destructive-action, and false-positive paths.
+
+This check validates corpus structure only. It does not run a model or claim that any model passes the cases consistently. Model evaluations should record the model/version, instruction version, evaluator, observed decision, and supporting output separately.
+
 ### Repository-local Markdown links
 
 `scripts/check-markdown-links.py` verifies links between tracked Markdown files and other repository-local targets without making network requests. It rejects missing targets and paths that escape the repository, while ignoring external URLs, page anchors, and links shown inside fenced examples.
@@ -49,6 +55,7 @@ From the repository root:
 ```bash
 python3 -m unittest discover -s tests -p 'test_check_text_hygiene.py' -v
 python3 scripts/check-text-hygiene.py
+python3 -m unittest discover -s tests -p 'test_evaluation_corpus.py' -v
 python3 -m unittest discover -s tests -p 'test_check_markdown_links.py' -v
 python3 scripts/check-markdown-links.py
 
