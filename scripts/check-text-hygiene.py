@@ -3,11 +3,25 @@
 
 from __future__ import annotations
 
+import re
 import subprocess
 import sys
 from pathlib import Path
 
 CHECKED_SUFFIXES = {".md", ".py", ".yml", ".yaml"}
+SECRET_PATTERNS = (
+    ("AWS access key ID", re.compile(r"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b")),
+    ("GitHub classic personal access token", re.compile(r"\bghp_[A-Za-z0-9]{36}\b")),
+    (
+        "GitHub fine-grained personal access token",
+        re.compile(r"\bgithub_pat_[A-Za-z0-9_]{40,}\b"),
+    ),
+    ("OpenAI-style API key", re.compile(r"\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\b")),
+    (
+        "PEM private key header",
+        re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
+    ),
+)
 
 
 def tracked_files() -> list[Path]:
@@ -40,6 +54,12 @@ def check_file(path: Path) -> list[str]:
         if line.rstrip(" \t") != line:
             failures.append(f"{path}:{line_number}: trailing whitespace")
 
+        for label, pattern in SECRET_PATTERNS:
+            if pattern.search(line):
+                failures.append(
+                    f"{path}:{line_number}: possible unredacted {label}"
+                )
+
     return failures
 
 
@@ -60,7 +80,8 @@ def main() -> int:
         return 1
 
     print(
-        f"Validated UTF-8, final newlines, and trailing whitespace in {checked} text files."
+        "Validated UTF-8, final newlines, trailing whitespace, and high-confidence "
+        f"credential shapes in {checked} text files."
     )
     return 0
 

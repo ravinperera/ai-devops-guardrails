@@ -43,6 +43,34 @@ class TextHygieneTests(unittest.TestCase):
         failures = self.check_bytes(b"# Example\n\xff\n")
         self.assertTrue(any("is not valid UTF-8" in failure for failure in failures))
 
+    def test_aws_access_key_shape_is_reported(self) -> None:
+        token = "AKIA" + ("A" * 16)
+        failures = self.check_bytes(f"key: {token}\n".encode())
+        self.assertTrue(any("AWS access key ID" in failure for failure in failures))
+
+    def test_github_pat_shape_is_reported(self) -> None:
+        token = "ghp_" + ("a" * 36)
+        failures = self.check_bytes(f"token: {token}\n".encode())
+        self.assertTrue(any("GitHub classic personal access token" in failure for failure in failures))
+
+    def test_openai_key_shape_is_reported(self) -> None:
+        token = "sk-proj-" + ("a" * 24)
+        failures = self.check_bytes(f"token: {token}\n".encode())
+        self.assertTrue(any("OpenAI-style API key" in failure for failure in failures))
+
+    def test_private_key_header_is_reported(self) -> None:
+        header = "-----BEGIN " + "PRIVATE KEY-----"
+        failures = self.check_bytes(f"{header}\n".encode())
+        self.assertTrue(any("PEM private key header" in failure for failure in failures))
+
+    def test_redacted_examples_remain_valid(self) -> None:
+        content = (
+            "AWS_ACCESS_KEY_ID=AKIA<redacted>\n"
+            "GITHUB_TOKEN=ghp_<redacted>\n"
+            "OPENAI_API_KEY=sk-<redacted>\n"
+        ).encode()
+        self.assertEqual(self.check_bytes(content), [])
+
 
 if __name__ == "__main__":
     unittest.main()

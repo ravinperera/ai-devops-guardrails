@@ -8,16 +8,19 @@ The workflow runs on pull requests and pushes to `main`.
 
 ### Text-hygiene regression tests
 
-`tests/test_check_text_hygiene.py` exercises the dependency-free text validator against valid UTF-8 content, trailing whitespace, missing final newlines, NUL bytes, and invalid UTF-8. This protects the validator's expected failure behaviour as the repository evolves.
+`tests/test_check_text_hygiene.py` exercises the dependency-free text validator against valid UTF-8 content, trailing whitespace, missing final newlines, NUL bytes, invalid UTF-8, high-confidence credential shapes, and redacted examples. This protects the validator's expected failure behaviour as the repository evolves.
 
-### Markdown and YAML text hygiene
+### Markdown, Python, and YAML text hygiene
 
-`scripts/check-text-hygiene.py` examines tracked Markdown and YAML files and verifies that they:
+`scripts/check-text-hygiene.py` examines tracked Markdown, Python, and YAML files and verifies that they:
 
 - are valid UTF-8 text;
 - do not contain NUL bytes;
-- end with a final newline; and
-- do not contain trailing spaces or tabs.
+- end with a final newline;
+- do not contain trailing spaces or tabs; and
+- do not contain a narrow set of obvious credential-shaped values such as AWS access-key IDs, GitHub personal access tokens, OpenAI-style API keys, or PEM private-key headers.
+
+The credential patterns are intentionally conservative. Redacted placeholders remain valid, and the check is not a replacement for GitHub secret scanning, provider-side revocation, or scanning repository history after an exposure.
 
 The script uses only the Python standard library and `git ls-files`, so contributors do not need to install a package manager dependency.
 
