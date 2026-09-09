@@ -24,6 +24,9 @@ class TextHygieneTests(unittest.TestCase):
     def test_python_files_are_included_in_hygiene_scope(self) -> None:
         self.assertIn(".py", hygiene.CHECKED_SUFFIXES)
 
+    def test_json_files_are_included_in_hygiene_scope(self) -> None:
+        self.assertIn(".json", hygiene.CHECKED_SUFFIXES)
+
     def test_valid_utf8_with_final_newline_passes(self) -> None:
         self.assertEqual(self.check_bytes("# Café\n".encode("utf-8")), [])
 
