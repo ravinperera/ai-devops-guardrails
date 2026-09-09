@@ -8,7 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-CHECKED_SUFFIXES = {".md", ".py", ".yml", ".yaml"}
+CHECKED_SUFFIXES = {".json", ".md", ".py", ".yml", ".yaml"}
 SECRET_PATTERNS = (
     ("AWS access key ID", re.compile(r"\b(?:AKIA|ASIA)[A-Z0-9]{16}\b")),
     ("GitHub classic personal access token", re.compile(r"\bghp_[A-Za-z0-9]{36}\b")),
