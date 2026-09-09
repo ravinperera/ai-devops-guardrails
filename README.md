@@ -116,6 +116,7 @@ For repeatable regression testing, [`examples/evaluation-corpus.json`](examples/
 - [Contributing](CONTRIBUTING.md) — propose focused changes, protect sensitive data, and run the credential-free checks.
 - [Agent installation](docs/installation.md) — copy and verify instruction files for supported workflows.
 - [Security model](docs/security-model.md) — understand protected assets, trust boundaries, decision outcomes and companion controls.
+- [Operational stop conditions and rollback](docs/operational-stop-conditions.md) — decide when an AI-assisted DevOps change should pause, escalate, roll back, or abort, and what evidence to preserve.
 - [Refusal examples](docs/refusal-examples.md) — learn when an agent should pause or decline a request and provide a safer alternative.
 - [Evaluation corpus](examples/evaluation-corpus.json) — machine-readable synthetic cases for regression-testing guardrail decisions without live cloud access.
 - [Repository validation](docs/validation.md) — understand the credential-free CI checks and intentional exclusions.
