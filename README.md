@@ -114,6 +114,7 @@ For repeatable regression testing, [`examples/evaluation-corpus.json`](examples/
 ## Project guides
 
 - [Contributing](CONTRIBUTING.md) — propose focused changes, protect sensitive data, and run the credential-free checks.
+- [Change history](CHANGELOG.md) — see notable untagged improvements and their verification limits.
 - [Agent installation](docs/installation.md) — copy and verify instruction files for supported workflows.
 - [Security model](docs/security-model.md) — understand protected assets, trust boundaries, decision outcomes and companion controls.
 - [Operational stop conditions and rollback](docs/operational-stop-conditions.md) — decide when an AI-assisted DevOps change should pause, escalate, roll back, or abort, and what evidence to preserve.
