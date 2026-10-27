@@ -66,6 +66,43 @@ class TextHygieneTests(unittest.TestCase):
         failures = self.check_bytes(f"{header}\n".encode())
         self.assertTrue(any("PEM private key header" in failure for failure in failures))
 
+    def test_other_supported_credential_shapes_are_reported(self) -> None:
+        # Build synthetic values at runtime so fixtures cannot be mistaken for secrets.
+        cases = (
+            ("temporary AWS key", "ASIA" + ("A" * 16), "AWS access key ID"),
+            (
+                "fine-grained GitHub token",
+                "github_pat_" + ("a" * 40),
+                "GitHub fine-grained personal access token",
+            ),
+            ("non-project OpenAI key", "sk-" + ("a" * 24), "OpenAI-style API key"),
+            ("RSA private key", "-----BEGIN " + "RSA PRIVATE KEY-----", "PEM private key header"),
+            ("EC private key", "-----BEGIN " + "EC PRIVATE KEY-----", "PEM private key header"),
+            (
+                "OpenSSH private key",
+                "-----BEGIN " + "OPENSSH PRIVATE KEY-----",
+                "PEM private key header",
+            ),
+        )
+        for name, value, label in cases:
+            with self.subTest(shape=name):
+                failures = self.check_bytes(f"example: {value}\n".encode())
+                self.assertTrue(any(label in failure for failure in failures), failures)
+
+    def test_redacted_and_incomplete_credential_lookalikes_pass(self) -> None:
+        examples = (
+            "ASIA<redacted>",
+            "github_pat_<redacted>",
+            "sk-<redacted>",
+            "ASIA" + ("A" * 15),
+            "github_pat_" + ("a" * 39),
+            "sk-" + ("a" * 19),
+            "-----BEGIN OPENSSH PRIVATE KEY (redacted)-----",
+        )
+        for example in examples:
+            with self.subTest(example=example):
+                self.assertEqual(self.check_bytes(f"{example}\n".encode()), [])
+
     def test_redacted_examples_remain_valid(self) -> None:
         content = (
             "AWS_ACCESS_KEY_ID=AKIA<redacted>\n"
