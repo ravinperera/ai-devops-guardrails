@@ -61,5 +61,53 @@ class MarkdownLinkTests(unittest.TestCase):
         self.assertEqual(failures, [])
 
 
+    def test_existing_local_images_pass(self) -> None:
+        failures = self.run_check(
+            "![Diagram](docs/diagram.png)\\n![](docs/icon.svg)\\n",
+            ["docs/diagram.png", "docs/icon.svg"],
+        )
+        self.assertEqual(failures, [])
+
+    def test_missing_local_images_fail_even_with_empty_alt_text(self) -> None:
+        failures = self.run_check(
+            "![Diagram](docs/missing.png)\\n![](docs/missing-icon.svg)\\n"
+        )
+        self.assertEqual(
+            2, sum("missing local link target" in failure for failure in failures)
+        )
+
+    def test_local_image_cannot_escape_repository(self) -> None:
+        failures = self.run_check("![Outside](../outside.png)\\n")
+        self.assertTrue(any("escapes repository" in failure for failure in failures))
+
+    def test_remote_and_data_images_are_ignored(self) -> None:
+        failures = self.run_check(
+            "![Remote](https://example.com/image.png)\\n"
+            "![](data:image/png;base64,AAAA)\\n"
+        )
+        self.assertEqual(failures, [])
+
+    def test_image_inside_fenced_example_is_ignored(self) -> None:
+        failures = self.run_check(
+            "```markdown\\n![Example](docs/missing.png)\\n```\\n"
+        )
+        self.assertEqual(failures, [])
+
+    def test_quoted_link_titles_and_angle_paths_pass(self) -> None:
+        failures = self.run_check(
+            "[Guide](docs/guide.md \\"Guide\\")\\n"
+            "[Details](<docs/my guide.md> 'More details')\\n"
+            "![Diagram](docs/diagram.png \\"Architecture diagram\\")\\n",
+            ["docs/guide.md", "docs/my guide.md", "docs/diagram.png"],
+        )
+        self.assertEqual(failures, [])
+
+    def test_missing_local_link_with_title_still_fails(self) -> None:
+        failures = self.run_check('[Missing](docs/missing.md "Reference")\\n')
+        self.assertTrue(
+            any("missing local link target" in failure for failure in failures)
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
