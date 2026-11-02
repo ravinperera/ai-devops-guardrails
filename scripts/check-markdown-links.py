@@ -11,7 +11,8 @@ import urllib.parse
 from pathlib import Path
 from typing import Iterable
 
-LINK_PATTERN = re.compile(r"(?<!!)\[[^\]]+\]\(([^)]+)\)")
+LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
+TITLE_SUFFIX_PATTERN = re.compile(r"""[ \t]+(?:"[^"\n]*"|'[^'\n]*')$""")
 EXTERNAL_PREFIXES = ("http://", "https://", "mailto:", "tel:", "data:")
 
 
@@ -64,7 +65,9 @@ def check_markdown_links(path: Path, root: Path) -> list[str]:
     failures: list[str] = []
 
     for line_number, raw_target in markdown_targets(text):
-        target = raw_target
+        # Markdown destinations may have an optional quoted title after the path.
+        # Strip it before resolving the local file, preserving spaces inside <...>.
+        target = TITLE_SUFFIX_PATTERN.sub("", raw_target)
         if target.startswith("<") and target.endswith(">"):
             target = target[1:-1].strip()
 
