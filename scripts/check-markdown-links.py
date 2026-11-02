@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Iterable
 
 LINK_PATTERN = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
-TITLE_SUFFIX_PATTERN = re.compile(r"""[ \t]+(?:"[^"\n]*"|\x27[^\x27\n]*\x27)$""")
+TITLE_SUFFIX_PATTERN = re.compile(r"""[ \t]+(?:"[^"\n]*"|'[^'\n]*')$""")
 EXTERNAL_PREFIXES = ("http://", "https://", "mailto:", "tel:", "data:")
 
 
