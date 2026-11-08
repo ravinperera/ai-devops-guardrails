@@ -109,5 +109,45 @@ class MarkdownLinkTests(unittest.TestCase):
         )
 
 
+    def test_shorter_backtick_fence_does_not_close_longer_fence(self) -> None:
+        failures = self.run_check(
+            "````markdown\n"
+            "[example](missing-hidden.md)\n"
+            "```\n"
+            "[still example](also-hidden.md)\n"
+            "````\n"
+            "[visible](missing-visible.md)\n"
+        )
+        self.assertEqual(len(failures), 1)
+        self.assertIn("missing-visible.md", failures[0])
+
+    def test_tilde_fence_requires_matching_character_and_length(self) -> None:
+        failures = self.run_check(
+            "~~~~markdown\n"
+            "[example](missing-hidden.md)\n"
+            "~~~\n"
+            "[still example](also-hidden.md)\n"
+            "```\n"
+            "[also example](another-hidden.md)\n"
+            "~~~~\n"
+            "[visible](docs/real.md)\n",
+            ["docs/real.md"],
+        )
+        self.assertEqual(failures, [])
+
+    def test_closing_fence_cannot_have_info_string(self) -> None:
+        failures = self.run_check(
+            "````markdown\n"
+            "[example](missing-hidden.md)\n"
+            "````not-a-close\n"
+            "[still example](also-hidden.md)\n"
+            "````\n"
+            "[visible](missing-visible.md)\n"
+        )
+        self.assertEqual(len(failures), 1)
+        self.assertIn("missing-visible.md", failures[0])
+
+
+
 if __name__ == "__main__":
     unittest.main()

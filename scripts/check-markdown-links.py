@@ -30,33 +30,34 @@ def tracked_markdown_files(root: Path) -> list[Path]:
 
 
 def markdown_targets(text: str) -> Iterable[tuple[int, str]]:
-    in_fence = False
-    fence_marker: str | None = None
+    fence_char: str | None = None
+    fence_width = 0
 
     for line_number, line in enumerate(text.splitlines(), start=1):
         stripped = line.lstrip()
-        if stripped.startswith("```"):
-            marker = "```"
-        elif stripped.startswith("~~~"):
-            marker = "~~~"
-        else:
-            marker = None
+        marker_match = re.match(r"^(`{3,}|~{3,})(.*)$", stripped)
+        if marker_match:
+            marker, remainder = marker_match.groups()
+            if fence_char is None:
+                # Backtick info strings must not contain backticks.
+                if marker[0] == "~" or "`" not in remainder:
+                    fence_char = marker[0]
+                    fence_width = len(marker)
+                    continue
+            elif (
+                marker[0] == fence_char
+                and len(marker) >= fence_width
+                and not remainder.strip()
+            ):
+                fence_char = None
+                fence_width = 0
+                continue
 
-        if marker:
-            if not in_fence:
-                in_fence = True
-                fence_marker = marker
-            elif marker == fence_marker:
-                in_fence = False
-                fence_marker = None
-            continue
-
-        if in_fence:
+        if fence_char is not None:
             continue
 
         for match in LINK_PATTERN.finditer(line):
             yield line_number, match.group(1).strip()
-
 
 def check_markdown_links(path: Path, root: Path) -> list[str]:
     root = root.resolve()
