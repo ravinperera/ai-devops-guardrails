@@ -35,6 +35,9 @@ def tracked_files() -> list[Path]:
 
 def check_file(path: Path) -> list[str]:
     failures: list[str] = []
+    # A tracked symlink must not make this check read outside the checkout.
+    if path.is_symlink():
+        return [f"{path}: tracked text file is a symbolic link"]
     raw = path.read_bytes()
 
     if b"\0" in raw:
