@@ -27,6 +27,29 @@ class TextHygieneTests(unittest.TestCase):
     def test_json_files_are_included_in_hygiene_scope(self) -> None:
         self.assertIn(".json", hygiene.CHECKED_SUFFIXES)
 
+    def test_tracked_symlinks_are_rejected_before_reading_targets(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            checkout = root / "checkout"
+            checkout.mkdir()
+            outside = root / "outside.md"
+            outside.write_bytes(b"\xff")
+            inside = checkout / "inside.md"
+            inside.write_text("inside\n", encoding="utf-8")
+
+            for name, target in (
+                ("external.md", outside),
+                ("internal.md", inside),
+                ("dangling.md", checkout / "missing.md"),
+            ):
+                with self.subTest(name=name):
+                    link = checkout / name
+                    link.symlink_to(target)
+                    self.assertEqual(
+                        hygiene.check_file(link),
+                        [f"{link}: tracked text file is a symbolic link"],
+                    )
+
     def test_valid_utf8_with_final_newline_passes(self) -> None:
         self.assertEqual(self.check_bytes("# Café\n".encode("utf-8")), [])
 
