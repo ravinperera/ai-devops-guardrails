@@ -35,7 +35,14 @@ def markdown_targets(text: str) -> Iterable[tuple[int, str]]:
 
     for line_number, line in enumerate(text.splitlines(), start=1):
         stripped = line.lstrip()
-        marker_match = re.match(r"^(`{3,}|~{3,})(.*)$", stripped)
+        # Only zero to three spaces may introduce a top-level Markdown fence.
+        # Four-space indentation and tabs denote code, not fence delimiters.
+        leading = line[: len(line) - len(stripped)]
+        marker_match = (
+            re.match(r"^(`{3,}|~{3,})(.*)$", stripped)
+            if leading in ("", " ", "  ", "   ")
+            else None
+        )
         if marker_match:
             marker, remainder = marker_match.groups()
             if fence_char is None:
