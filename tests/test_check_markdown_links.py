@@ -149,5 +149,43 @@ class MarkdownLinkTests(unittest.TestCase):
 
 
 
+    def test_four_space_indented_pseudo_fence_does_not_hide_links(self) -> None:
+        failures = self.run_check(
+            "    ```markdown\n"
+            "[visible](missing-visible.md)\n"
+        )
+        self.assertEqual(len(failures), 1)
+        self.assertIn("missing-visible.md", failures[0])
+
+    def test_tab_indented_pseudo_fence_does_not_hide_links(self) -> None:
+        failures = self.run_check(
+            "\t```markdown\n"
+            "[visible](missing-visible.md)\n"
+        )
+        self.assertEqual(len(failures), 1)
+        self.assertIn("missing-visible.md", failures[0])
+
+    def test_indented_pseudo_closer_does_not_end_valid_fence(self) -> None:
+        failures = self.run_check(
+            "```markdown\n"
+            "    ```\n"
+            "[hidden](missing-hidden.md)\n"
+            "```\n"
+            "[visible](missing-visible.md)\n"
+        )
+        self.assertEqual(len(failures), 1)
+        self.assertIn("missing-visible.md", failures[0])
+
+    def test_three_space_indented_fence_is_still_valid(self) -> None:
+        failures = self.run_check(
+            "   ```markdown\n"
+            "[hidden](missing-hidden.md)\n"
+            "   ```\n"
+            "[visible](docs/real.md)\n",
+            ["docs/real.md"],
+        )
+        self.assertEqual(failures, [])
+
+
 if __name__ == "__main__":
     unittest.main()
